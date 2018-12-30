@@ -150,7 +150,7 @@ module cpu(
 
   	//ctrl
 	ctrl ctrl0(
-		.rst(rst),
+		.rst(rst_in),
 		.stallreq_from_if(stallreq_from_if),
 		.stallreq_from_id(stallreq_from_id),
 		.stallreq_from_ex(stallreq_from_ex),
@@ -159,8 +159,8 @@ module cpu(
 	);
 	//pc
 	pc_reg pc_reg0(
-		.clk(clk),
-		.rst(rst),
+		.clk(clk_in),
+		.rst(rst_in),
 		.stall(stall),
 
 		.branch_flag_i(branch_flag),
@@ -171,7 +171,7 @@ module cpu(
 	);
 
 	_if _if0(
-		.rst(rst),
+		.rst(rst_in),
 		.pc_i(pc),
 		.ce_i(ce),
 
@@ -190,8 +190,8 @@ module cpu(
 	);
 
 	if_id if_id0(
-		.clk(clk),
-		.rst(rst),
+		.clk(clk_in),
+		.rst(rst_in),
 		.stall(stall),
 
 		.if_pc(if_pc_o),
@@ -205,7 +205,7 @@ module cpu(
 	);
 
 	id id0(
-		.rst(rst),
+		.rst(rst_in),
 		.pc_i(id_pc_i),
 		.inst_i(id_inst_i),
 
@@ -244,8 +244,8 @@ module cpu(
 	);
 
 	regfile regfile0(
-		.clk(clk),
-		.rst(rst),
+		.clk(clk_in),
+		.rst(rst_in),
 
 		.we(wb_wreg_i),
 		.waddr(wb_wd_i),
@@ -261,8 +261,8 @@ module cpu(
 	);
 
 	id_ex id_ex0(
-		.clk(clk),
-		.rst(rst),
+		.clk(clk_in),
+		.rst(rst_in),
 		.stall(stall),
 
 		.id_pc(id_pc_o),
@@ -287,6 +287,7 @@ module cpu(
 	);
 
 	ex ex0(
+	    .rst(rst_in),
 		.pc_i(ex_pc_i),
 		.op_i(ex_op_i),
 		.funct3_i(ex_funct3_i),
@@ -310,8 +311,8 @@ module cpu(
 	);
 
 	ex_mem ex_mem(
-		.clk(clk),
-		.rst(rst),
+		.clk(clk_in),
+		.rst(rst_in),
 		.stall(stall),
 
 		.ex_wd(ex_wd_o),
@@ -332,7 +333,7 @@ module cpu(
 	);
 
 	mem mem0(
-		.rst(rst),
+		.rst(rst_in),
 
 		.op_i(mem_op_i),
 		.funct3_i(mem_funct3_i),
@@ -363,8 +364,8 @@ module cpu(
 	);
 
 	mem_wb mem_wb0(
-		.clk(clk),
-		.rst(rst),
+		.clk(clk_in),
+		.rst(rst_in),
 		.stall(stall),
 
 		.mem_wd(mem_wd_o),
@@ -380,8 +381,8 @@ module cpu(
 	);
 
 	mem_ctrl mem_ctrl0(
-		.clk(clk),
-		.rst(rst),
+		.clk(clk_in),
+		.rst(rst_in),
 
 	 	.addr_i(mem_addr_o),
 		.we_i(mem_we_o),

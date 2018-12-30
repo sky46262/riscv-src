@@ -10,7 +10,7 @@
 `define False_v				1'b0			//logic false
 
 `define Funct3_Bus 			2:0
-`define Op_Bus 				7:0
+`define Op_Bus 				6:0
 
 
 //**********	op code		*******

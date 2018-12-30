@@ -110,7 +110,7 @@ module ex(
 								wdata_o <= reg1_i ^ reg2_i;
 							end
 							`SRL_SRA_FUNCT3: begin
-								if (funct7 == `SRA_FUNCT7) begin
+								if (funct7_i == `SRA_FUNCT7) begin
 									//sra
 									//wdata_o <= ({32{reg1_i[31]}} << (6'd32 - {1'b0, reg2_i[4:0]})) | reg1_i >> reg2_i[4:0];
 									wdata_o <= reg1_i >>> reg2_i[4:0];

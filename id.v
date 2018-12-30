@@ -188,7 +188,7 @@ reg 			inst_valid;
 						`BEQ_FUNCT3: begin
 							if (reg1_o == reg2_o) begin
 								branch_flag_o <= `Enabled;
-								branch_address_o <= imm_o;
+								branch_address_o <= pc_i + imm_o;
 							end
 							else begin
 								branch_flag_o <= `Disabled;
@@ -198,7 +198,7 @@ reg 			inst_valid;
 						`BNE_FUNCT3: begin
 							if (reg1_o != reg2_o) begin
 								branch_flag_o <= `Enabled;
-								branch_address_o <= imm_o;
+								branch_address_o <= pc_i + imm_o;
 							end
 							else begin
 								branch_flag_o <= `Disabled;
@@ -208,7 +208,7 @@ reg 			inst_valid;
 						`BLE_FUNCT3: begin
 							if ($signed(reg1_o) < $signed(reg2_o)) begin
 								branch_flag_o <= `Enabled;
-								branch_address_o <= imm_o;
+								branch_address_o <= pc_i + imm_o;
 							end
 							else begin
 								branch_flag_o <= `Disabled;
@@ -218,7 +218,7 @@ reg 			inst_valid;
 						`BLTU_FUNCT3: begin
 							if (reg1_o < reg2_o) begin
 								branch_flag_o <= `Enabled;
-								branch_address_o <= imm_o;
+								branch_address_o <= pc_i + imm_o;
 							end
 							else begin
 								branch_flag_o <= `Disabled;
@@ -228,7 +228,7 @@ reg 			inst_valid;
 						`BGE_FUNCT3: begin
 							if ($signed(reg1_o) > $signed(reg2_o)) begin
 								branch_flag_o <= `Enabled;
-								branch_address_o <= imm_o;
+								branch_address_o <= pc_i + imm_o;
 							end
 							else begin
 								branch_flag_o <= `Disabled;
@@ -238,7 +238,7 @@ reg 			inst_valid;
 						`BGEU_FUNCT3: begin
 							if (reg1_o > reg2_o) begin
 								branch_flag_o <= `Enabled;
-								branch_address_o <= imm_o;
+								branch_address_o <= pc_i + imm_o;
 							end
 							else begin
 								branch_flag_o <= `Disabled;
@@ -279,7 +279,7 @@ reg 			inst_valid;
 					imm_o <= {inst_i[31]? {11{1'b1}}: {11{1'b0}}, inst_i[31], inst_i[19:12], inst_i[20], inst_i[30:21], 1'b0};
 					
 					branch_flag_o <= `Enabled;
-					branch_address_o <= imm_o;
+					branch_address_o <= pc_i + imm_o;
 				end
 				default: begin
 					reg1_read_o <= `Disabled;
@@ -294,7 +294,7 @@ reg 			inst_valid;
 
 					imm_o <= `Zero_Word;
 					
-					branch_flag_o <= `Disabled;
+					//branch_flag_o <= `Disabled;
 				end
 			endcase
 		end

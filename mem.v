@@ -49,206 +49,86 @@ module mem(
 			stallreq_o <= `Disabled;
 			cnt_o <= 3'b000;
 		end
-		else if (mem_busy_i) begin
-			wd_o <= `Null_RegAddr;
-			wreg_o <= `Disabled;
-			wdata_o <= `Zero_Word;
-			mem_addr_o <= `Zero_Word;
-			mem_we_o <= `Disabled;
-			mem_sel_o <= 3'b000;
-			mem_data_o <= `Zero_Word;
-			mem_ce_o <= `Disabled;
-			stallreq_o <= `Enabled;
-			cnt_o <= 3'b000;
-		end 
 		else begin
 			wd_o <= wd_i;
 			wreg_o <= wreg_i;
-			if (op_i == `LOAD_CODE) begin
-				mem_we_o <= `Disabled;
-				mem_data_o <= `Zero_Word;
-
-				case (funct3_i)
-					`LB_FUNCT3: begin
-						if (cnt_i == 3'b000) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_sel_o <= 3'b001;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b001) begin
-							wdata_o <= mem_data_i;
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-					end
-					`LH_FUNCT3: begin
-						if (cnt_i < 3'b010) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_sel_o <= 3'b010;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b010) begin
-							wdata_o <= mem_data_i;
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-
-					end
-					`LW_FUNCT3: begin
-						if (cnt_i < 3'b100) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_sel_o <= 3'b100;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b100) begin
-							wdata_o <= mem_data_i;
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-					end
-
-					//??? U
-					`LBU_FUNCT3: begin
-						if (cnt_i == 3'b000) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_sel_o <= 3'b001;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b001) begin
-							wdata_o <= mem_data_i;
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-					end
-					`LHU_FUNCT3: begin
-						if (cnt_i < 3'b010) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_sel_o <= 3'b010;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b010) begin
-							wdata_o <= mem_data_i;
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-					end
-					default: begin
-						mem_addr_o <= `Zero_Word;
-						mem_ce_o <= `Disabled;
-						mem_sel_o <= 3'b000;
-						wdata_o <= wdata_i;
-						stallreq_o <= `Disabled;
-						cnt_o <= 3'b000;
-					end
-				endcase
-			end else if (op_i == `STORE_CODE) begin
-				wdata_o <= wdata_i;
-				case (funct3_i)
-					`SB_FUNCT3: begin
-						if (cnt_i < 3'b001) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_we_o <= `Enabled;
-							mem_data_o <= reg_i;
-							mem_sel_o <= 3'b001;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b001) begin
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_we_o <= `Disabled;
-							mem_data_o <= `Zero_Word;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-					end
-					`SH_FUNCT3: begin
-						if (cnt_i < 3'b010) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_we_o <= `Enabled;
-							mem_data_o <= reg_i;
-							mem_sel_o <= 3'b010;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b001) begin
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_we_o <= `Disabled;
-							mem_data_o <= `Zero_Word;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-					end
-					`SW_FUNCT3: begin
-						if (cnt_i < 3'b100) begin
-							mem_addr_o <= mem_addr_i;
-							mem_ce_o <= `Enabled;
-							mem_we_o <= `Enabled;
-							mem_data_o <= reg_i;
-							mem_sel_o <= 3'b100;
-							stallreq_o <= `Enabled;
-							cnt_o <= cnt_i + 1'b1;
-						end
-						else if (cnt_i == 3'b100) begin
-							mem_addr_o <= `Zero_Word;
-							mem_ce_o <= `Disabled;
-							mem_we_o <= `Disabled;
-							mem_data_o <= `Zero_Word;
-							mem_sel_o <= 3'b000;
-							stallreq_o <= `Disabled;
-							cnt_o <= 3'b000;
-						end
-					end
-					default: begin
-						mem_addr_o <= `Zero_Word;
-						mem_ce_o <= `Disabled;
-						mem_we_o <= `Disabled;
-						mem_data_o <= `Zero_Word;
-						mem_sel_o <= 3'b000;
-						stallreq_o <= `Disabled;
-						cnt_o <= 3'b000;
-					end
-				endcase 
-			end else begin
-				wdata_o <= wdata_i;
-				mem_addr_o <= `Zero_Word;
-				mem_we_o <= `Disabled;
-				mem_sel_o <= 3'b000;
-				mem_data_o <= `Zero_Word;
-				mem_ce_o <= `Disabled;
-				cnt_o <= 3'b000;
-				stallreq_o <= `Disabled;
+			if (op_i != `LOAD_CODE && op_i != `STORE_CODE) begin
+			    wdata_o <= wdata_i;
+                mem_addr_o <= `Zero_Word;
+                mem_we_o <= `Disabled;
+                mem_sel_o <= 3'b000;
+                mem_data_o <= `Zero_Word;
+                mem_ce_o <= `Disabled;
+                stallreq_o <= `Disabled;
+                cnt_o <= 3'b000;
 			end
+			else begin
+                //read finish
+                if (cnt_i == mem_sel_o && cnt_i > 1'b0) begin
+                    wdata_o <= mem_data_i;
+                    mem_addr_o <= `Zero_Word;
+                    mem_ce_o <= `Disabled;
+                    mem_sel_o <= 3'b000;
+                    stallreq_o <= `Disabled;
+                    cnt_o <= 3'b000;
+                end 
+                // read continue
+                else if (mem_ce_o) begin
+                    cnt_o <= cnt_i + 1'b1;
+                    mem_addr_o <= mem_addr_i;
+                end
+                else if (mem_busy_i) begin
+                    stallreq_o <= `Enabled;
+                end
+                else
+                // begin to read
+                if (op_i == `LOAD_CODE) begin
+                    mem_we_o <= `Disabled;
+                    mem_data_o <= `Zero_Word;
+                    mem_addr_o <= mem_addr_i;
+                    mem_ce_o <= `Enabled;
+                    stallreq_o <= `Enabled;
+                    cnt_o <= cnt_i + 1'b1;
+                    case (funct3_i)
+                        `LB_FUNCT3: begin
+                            mem_sel_o <= 3'b001;    
+                        end
+                        `LH_FUNCT3: begin
+                            mem_sel_o <= 3'b010;
+                         end
+                        `LW_FUNCT3: begin
+                            mem_sel_o <= 3'b100;
+                         end
+                        //??? U
+                        `LBU_FUNCT3: begin
+                            mem_sel_o <= 3'b001;
+                        end
+                        `LHU_FUNCT3: begin
+                            mem_sel_o <= 3'b010;
+                        end
+                    endcase
+                end
+                else if (op_i == `STORE_CODE) begin
+                    wdata_o <= wdata_i;
+                    mem_addr_o <= mem_addr_i;
+                    mem_ce_o <= `Enabled;
+                    mem_we_o <= `Enabled;
+                    mem_data_o <= reg_i;
+                    stallreq_o <= `Enabled;
+                    cnt_o <= cnt_i + 1'b1;
+                    case (funct3_i)
+                        `SB_FUNCT3: begin
+                                mem_sel_o <= 3'b001;
+                        end
+                        `SH_FUNCT3: begin
+                                mem_sel_o <= 3'b010;
+                        end
+                        `SW_FUNCT3: begin
+                                mem_sel_o <= 3'b100;
+                        end
+                    endcase 
+                end
+            end
 		end
 	end
 
